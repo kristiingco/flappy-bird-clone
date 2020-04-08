@@ -22,19 +22,33 @@ var mainState = {
         this.score = 0;
         this.goneThroughFirstRow = false;
         this.labelScore = game.add.text(20, 20, "0", {font: "30px Arial", fill: "#ffffff"});
+        this.bird.anchor.setTo(-0.2, 0.5);
     },
 
     update: function() {
+
+        if (this.bird.angle < 20)
+            this.bird.angle += 1;
+
         if (this.bird.y < 0 || this.bird.y > 490)
             this.restartGame();
         
         game.physics.arcade.overlap(
-            this.bird, this.pipes, this.restartGame, null, this
+            this.bird, this.pipes, this.hitPipe, null, this
         );
     },
 
     jump: function() {
+        if (this.bird.alive == false)
+            return;  
+            
         this.bird.body.velocity.y = -350;
+
+        var animation = game.add.tween(this.bird);
+
+        animation.to({angle: -20}, 100);
+
+        animation.start();
     },
 
     restartGame: function() {
@@ -71,6 +85,19 @@ var mainState = {
         }
         
         this.labelScore.text = this.score;
+    },
+
+    hitPipe: function() {
+        if (this.bird.alive == false)
+            return;
+        
+        this.bird.alive = false;
+
+        game.time.events.remove(this.timer);
+
+        this.pipes.forEach(function(p) {
+            p.body.velocity.x = 0;
+        }, this);
     }
     
 };
