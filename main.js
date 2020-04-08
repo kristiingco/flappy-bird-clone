@@ -2,6 +2,7 @@ var mainState = {
     preload: function() {
         game.load.image('bird', 'assets/bird.png');
         game.load.image('pipe', 'assets/pipe.png');
+        game.load.audio('jump', 'assets/jump.wav');
     },
 
     create: function() {
@@ -23,6 +24,8 @@ var mainState = {
         this.goneThroughFirstRow = false;
         this.labelScore = game.add.text(20, 20, "0", {font: "30px Arial", fill: "#ffffff"});
         this.bird.anchor.setTo(-0.2, 0.5);
+
+        this.jumpSound = game.add.audio('jump');
     },
 
     update: function() {
@@ -49,6 +52,8 @@ var mainState = {
         animation.to({angle: -20}, 100);
 
         animation.start();
+
+        this.jumpSound.play();
     },
 
     restartGame: function() {
